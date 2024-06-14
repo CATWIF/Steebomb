@@ -93,21 +93,22 @@
         background-color: #e64a19; /* Darker orange */
       }
 
-      @media (max-width: 768px) {
+      @media (max-width: 767px) {
   .grid {
-    grid-template-columns: repeat(10, 4vw); /* Adjust the width of columns for mobile */
-    grid-template-rows: repeat(10, 4vw); /* Adjust the height of rows for mobile */
+    display: grid;
+    grid-template-columns: repeat(10, 1fr); /* 10 columnas iguales */
+    grid-template-rows: repeat(10, 1fr); /* 10 filas iguales */
+    gap: 1px;
   }
 
+  h1 {
+    font-size: 2rem; /* Tamaño de fuente del título ajustado */
+  }
 
-        h1 {
-          font-size: 2rem;
-        }
-
-        .instructions {
-          font-size: 0.9rem;
-        }
-      }
+  .instructions {
+    font-size: 0.9rem; /* Tamaño de fuente de las instrucciones ajustado */
+  }
+}
   </style>
 </head>
 <body>
@@ -336,3 +337,4 @@
   </script>
 </body>
 </html>
+git
