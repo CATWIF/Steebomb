@@ -94,7 +94,7 @@
       }
 
       @media (max-width: 767px) {
-        body{
+        body,html {
   font-family: 'Unbounded', sans-serif;
   background: linear-gradient(to right, #ff0000, #f1bd02);
   color: #fff;
@@ -194,27 +194,19 @@
 
       // Event listener for placing a flag with right click or long press on mobile
       square.addEventListener('click', function(e) {
-  e.preventDefault(); // Prevenir el comportamiento predeterminado del click en dispositivos móviles
-  if (e.type === 'click' || e.type === 'touchstart') {
-    click(square);
-  }
-});
+        click(square);
+      });
 
-square.addEventListener('touchstart', function(e) {
-  e.preventDefault(); // Prevenir el comportamiento predeterminado del touch en dispositivos móviles
-  if (e.touches.length === 1) {
-    // Touch corto: Colocar un stink
-    addFlag(square);
-  } else if (e.touches.length > 1) {
-    // Touch largo: Revelar el cuadrado
-    click(square);
-  }
-});
-square.addEventListener('contextmenu', function(e) {
-  e.preventDefault(); // Prevenir el menú contextual del navegador en dispositivos móviles
-  addFlag(square);
-});
+      square.addEventListener('touchstart', function(e) {
+        e.preventDefault(); // Prevent default touch behavior (like scrolling)
+        addFlag(square);
+      });
 
+      square.oncontextmenu = function(e) {
+        e.preventDefault(); // Prevent default right-click context menu
+        addFlag(square);
+      };
+    }
 
     for (let i = 0; i < squares.length; i++) {
       let total = 0;
