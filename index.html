@@ -7,112 +7,122 @@
   <!-- Bootstrap CSS -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
-      body {
-        font-family: 'Unbounded', sans-serif;
-        background: linear-gradient(to right, #ff0000, #f1bd02); /* Updated background gradient */
-        color: #fff;
-        overflow-x: hidden;
-      }
+    body {
+      font-family: 'Unbounded', sans-serif;
+      background: linear-gradient(to right, #ff0000, #f1bd02);
+      color: #fff;
+    }
 
-      .container {
-  padding: 0;
-  margin: 0 auto;
-}
+    .container {
+      margin-top: 20px;
+      padding: 0;
+      margin: 0 auto;
+    }
 
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, 40px);
+      grid-template-rows: repeat(10, 40px);
+      gap: 1px;
+      overflow: hidden;
+      margin: auto;
+    }
+
+    .grid div {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ddd;
+      cursor: pointer;
+    }
+
+    .grid div.checked {
+      background-color: #bbb;
+      cursor: default;
+    }
+
+    .grid div.one {
+      color: blue;
+    }
+
+    .grid div.two {
+      color: green;
+    }
+
+    .grid div.three {
+      color: red;
+    }
+
+    .grid div.four {
+      color: darkblue;
+    }
+
+    .grid div img {
+      width: 40px;
+      height: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px #000;
+    }
+
+    .instructions {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .modal-header, .modal-footer {
+      background-color: #333;
+      border: none;
+    }
+
+    .modal-title {
+      color: #fff;
+    }
+
+    .btn-replay {
+      background-color: #ff5722;
+      border: none;
+      color: #fff;
+    }
+
+    .btn-replay:hover {
+      background-color: #e64a19;
+    }
+
+    html, body {
+      overflow-x: hidden;
+    }
+
+    .container {
+      padding: 0;
+      margin: 0 auto;
+    }
+
+    .grid {
+      overflow: hidden;
+      margin: auto;
+    }
+
+    @media (max-width: 767px) {
       .grid {
-        display: grid;
-  overflow: hidden;
-  margin: auto;
-
-        grid-template-columns: repeat(10, 40px);
-        grid-template-rows: repeat(10, 40px);
-        gap: 1px;
-      }
-
-      .grid div {
-        width: 40px;
-        height: 40px;
-        border: 2px solid #000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #ddd;
-        cursor: pointer;
-      }
-
-      .grid div.checked {
-        background-color: #bbb;
-        cursor: default;
-      }
-
-      .grid div.one {
-        color: blue;
-      }
-
-      .grid div.two {
-        color: green;
-      }
-
-      .grid div.three {
-        color: red;
-      }
-
-      .grid div.four {
-        color: darkblue;
-      }
-
-      .grid div img {
-        width: 40px;
-        height: 40px;
+        grid-template-columns: repeat(10, 30px);
       }
 
       h1 {
-        font-size: 2.5rem;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px #000;
+        font-size: 2rem;
       }
 
       .instructions {
-        background-color: rgba(0, 0, 0, 0.5);
-        padding: 20px;
-        border-radius: 8px;
+        font-size: 0.9rem;
       }
-
-      .modal-header,
-      .modal-footer {
-        background-color: #333;
-        border: none;
-      }
-
-      .modal-title {
-        color: #fff;
-      }
-
-      .btn-replay {
-        background-color: #ff5722; /* Vibrant orange */
-        border: none;
-        color: #fff;
-      }
-
-      .btn-replay:hover {
-        background-color: #e64a19; /* Darker orange */
-      }
-
-      @media (max-width: 767px) {
-        
-
-        .grid {
-    grid-template-columns: repeat(10, 30px);
-  }
-
-  h1 {
-    font-size: 2rem; /* Tamaño de fuente del título ajustado */
-  }
-
-  .instructions {
-    font-size: 0.9rem; /* Tamaño de fuente de las instrucciones ajustado */
-  }
-}
+    }
   </style>
 </head>
 <body>
@@ -121,17 +131,13 @@
       <div class="col-md-8">
         <h1 class="text-left mb-3">Steebombsweeper</h1>
         <div class="grid mt-4"></div>
-      
         <div class="text-left mt-4">
           <span id="result">Stinks left: </span><span id="flags-left"></span>
         </div>
       </div>
       <div class="col-md-4">
         <div class="instructions">
-          <h2>Instructions</h2>
-          <p><strong>Left Click:</strong> Reveal a square.</p>
-          <p><strong>Right Click:</strong> Place a Stink.</p>
-          <p>The goal is to reveal all squares that are not steebombs. Stinks can be used to mark suspected steebombs locations.</p>
+          <!-- Instructions will be dynamically updated here -->
         </div>
       </div>
     </div>
@@ -163,201 +169,229 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
   <script>
-   document.addEventListener('DOMContentLoaded', () => {
-  const grid = document.querySelector('.grid');
-  const flagsLeft = document.querySelector('#flags-left');
-  const result = document.querySelector('#result');
-  let width = 10;
-  let bombAmount = 20;
-  let flags = 0;
-  let squares = [];
-  let isGameOver = false;
-  let touchStartTime;
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.querySelector('.grid');
+      const flagsLeft = document.querySelector('#flags-left');
+      const result = document.querySelector('#result');
+      let width = 10;
+      let bombAmount = 20;
+      let flags = 0;
+      let squares = [];
+      let isGameOver = false;
+      let touchStartTime;
 
-  function createBoard() {
-    flagsLeft.innerHTML = bombAmount;
+      function createBoard() {
+        flagsLeft.innerHTML = bombAmount;
 
-    const bombsArray = Array(bombAmount).fill('bomb');
-    const emptyArray = Array(width * width - bombAmount).fill('valid');
-    const gameArray = emptyArray.concat(bombsArray);
-    const shuffledArray = gameArray.sort(() => Math.random() - 0.5);
+        const bombsArray = Array(bombAmount).fill('bomb');
+        const emptyArray = Array(width * width - bombAmount).fill('valid');
+        const gameArray = emptyArray.concat(bombsArray);
+        const shuffledArray = gameArray.sort(() => Math.random() - 0.5);
 
-    for (let i = 0; i < width * width; i++) {
-      const square = document.createElement('div');
-      square.setAttribute('id', i);
-      square.classList.add(shuffledArray[i]);
-      grid.appendChild(square);
-      squares.push(square);
+        for (let i = 0; i < width * width; i++) {
+          const square = document.createElement('div');
+          square.setAttribute('id', i);
+          square.classList.add(shuffledArray[i]);
+          grid.appendChild(square);
+          squares.push(square);
 
-      square.addEventListener('click', function(e) {
-        if (e.type === 'click') {
-          click(square);
+          square.addEventListener('click', function(e) {
+            if (e.type === 'click') {
+              click(square);
+            }
+          });
+
+          square.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            addFlag(square);
+          });
+
+          // Touch events
+          square.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            touchStartTime = Date.now();
+          });
+
+          square.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            let touchDuration = Date.now() - touchStartTime;
+            if (touchDuration < 500) { // Touch corto
+              click(square);
+            } else { // Touch largo
+              addFlag(square);
+            }
+          });
         }
-      });
 
-      square.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        addFlag(square);
-      });
+        for (let i = 0; i < squares.length; i++) {
+          let total = 0;
+          const isLeftEdge = (i % width === 0);
+          const isRightEdge = (i % width === width - 1);
 
-      // Touch events
-      square.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        touchStartTime = Date.now();
-      });
-
-      square.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        let touchDuration = Date.now() - touchStartTime;
-        if (touchDuration < 500) { // Touch corto
-          click(square);
-        } else { // Touch largo
-          addFlag(square);
+          if (squares[i].classList.contains('valid')) {
+            if (i > 0 && !isLeftEdge && squares[i - 1].classList.contains('bomb')) total++;
+            if (i > 9 && !isRightEdge && squares[i + 1 - width].classList.contains('bomb')) total++;
+            if (i > 10 && squares[i - width].classList.contains('bomb')) total++;
+            if (i > 11 && !isLeftEdge && squares[i - 1 - width].classList.contains('bomb')) total++;
+            if (i < 98 && !isRightEdge && squares[i + 1].classList.contains('bomb')) total++;
+            if (i < 90 && !isLeftEdge && squares[i - 1 + width].classList.contains('bomb')) total++;
+            if (i < 88 && !isRightEdge && squares[i + 1 + width].classList.contains('bomb')) total++;
+            if (i < 89 && squares[i + width].classList.contains('bomb')) total++;
+            squares[i].setAttribute('data', total);
+          }
         }
-      });
-    }
+      }
+      createBoard();
 
-    for (let i = 0; i < squares.length; i++) {
-      let total = 0;
-      const isLeftEdge = (i % width === 0);
-      const isRightEdge = (i % width === width - 1);
+      function addFlag(square) {
+        if (isGameOver) return;
+        if (!square.classList.contains('checked') && (flags < bombAmount)) {
+          if (!square.classList.contains('flag')) {
+            square.classList.add('flag');
+            square.innerHTML = '<img src="flag.png" alt="Flag">';
+            flags++;
+            flagsLeft.innerHTML = bombAmount - flags;
+            checkForWin();
+          } else {
+            square.classList.remove('flag');
+            square.innerHTML = '';
+            flags--;
+            flagsLeft.innerHTML = bombAmount - flags;
+          }
+        }
+      }
 
-      if (squares[i].classList.contains('valid')) {
-        if (i > 0 && !isLeftEdge && squares[i - 1].classList.contains('bomb')) total++;
-        if (i > 9 && !isRightEdge && squares[i + 1 - width].classList.contains('bomb')) total++;
-        if (i > 10 && squares[i - width].classList.contains('bomb')) total++;
-        if (i > 11 && !isLeftEdge && squares[i - 1 - width].classList.contains('bomb')) total++;
-        if (i < 98 && !isRightEdge && squares[i + 1].classList.contains('bomb')) total++;
-        if (i < 90 && !isLeftEdge && squares[i - 1 + width].classList.contains('bomb')) total++;
-        if (i < 88 && !isRightEdge && squares[i + 1 + width].classList.contains('bomb')) total++;
-        if (i < 89 && squares[i + width].classList.contains('bomb')) total++;
-        squares[i].setAttribute('data', total);
-      }
-    }
-  }
-  createBoard();
-
-  function addFlag(square) {
-    if (isGameOver) return;
-    if (!square.classList.contains('checked') && (flags < bombAmount)) {
-      if (!square.classList.contains('flag')) {
-        square.classList.add('flag');
-        square.innerHTML = '<img src="flag.png" alt="Flag">';
-        flags++;
-        flagsLeft.innerHTML = bombAmount - flags;
-        checkForWin();
-      } else {
-        square.classList.remove('flag');
-        square.innerHTML = '';
-        flags--;
-        flagsLeft.innerHTML = bombAmount - flags;
-      }
-    }
-  }
-
-  function click(square) {
-    let currentId = square.id;
-    if (isGameOver) return;
-    if (square.classList.contains('checked') || square.classList.contains('flag')) return;
-    if (square.classList.contains('bomb')) {
-      gameOver(square);
-    } else {
-      let total = square.getAttribute('data');
-      if (total != 0) {
-        square.classList.add('checked');
-        if (total == 1) square.classList.add('one');
-        if (total == 2) square.classList.add('two');
-        if (total == 3) square.classList.add('three');
-        if (total == 4) square.classList.add('four');
-        square.innerHTML = total;
-        return;
-      }
-      checkSquare(square, currentId);
-    }
-    square.classList.add('checked');
-  }
-
-  function checkSquare(square, currentId) {
-    const isLeftEdge = (currentId % width === 0);
-    const isRightEdge = (currentId % width === width - 1);
-
-    setTimeout(() => {
-      if (currentId > 0 && !isLeftEdge) {
-        const newId = squares[parseInt(currentId) - 1].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
-      }
-      if (currentId > 9 && !isRightEdge) {
-        const newId = squares[parseInt(currentId) + 1 - width].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
-      }
-      if (currentId > 10) {
-        const newId = squares[parseInt(currentId - width)].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
-      }
-      if (currentId > 11 && !isLeftEdge) {
-        const newId = squares[parseInt(currentId) - 1 - width].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
-      }
-      if (currentId < 98 && !isRightEdge) {
-        const newId = squares[parseInt(currentId) + 1].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
-      }
-      if (currentId < 90 && !isLeftEdge) {
-        const newId = squares[parseInt(currentId) - 1 + width].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
-      }
-      if (currentId < 88 && !isRightEdge) {
-        const newId = squares[parseInt(currentId) + 1 + width].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
-      }
-      if (currentId < 89) {
-        const newId = squares[parseInt(currentId) + width].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
-      }
-    }, 10);
-  }
-
-  function gameOver(square) {
-    result.innerHTML = '';
-    isGameOver = true;
-    document.getElementById('modalMessage').innerText = 'BOOM! Game Over!';
-    $('#gameOverModal').modal('show');
-
-    squares.forEach(square => {
-      if (square.classList.contains('bomb')) {
-        square.innerHTML = '<img src="bomba.png" alt="Bomb">';
-        square.classList.remove('bomb');
+      function click(square) {
+        let currentId = square.id;
+        if (isGameOver) return;
+        if (square.classList.contains('checked') || square.classList.contains('flag')) return;
+        if (square.classList.contains('bomb')) {
+          gameOver(square);
+        } else {
+          let total = square.getAttribute('data');
+          if (total != 0) {
+            square.classList.add('checked');
+            if (total == 1) square.classList.add('one');
+            if (total == 2) square.classList.add('two');
+            if (total == 3) square.classList.add('three');
+            if (total == 4) square.classList.add('four');
+            square.innerHTML = total;
+            return;
+          }
+          checkSquare(square, currentId);
+        }
         square.classList.add('checked');
       }
-    });
-  }
 
-  function checkForWin() {
-    let matches = 0;
+      function checkSquare(square, currentId) {
+        const isLeftEdge = (currentId % width === 0);
+        const isRightEdge = (currentId % width === width - 1);
 
-    for (let i = 0; i < squares.length; i++) {
-      if (squares[i].classList.contains('flag') && squares[i].classList.contains('bomb')) {
-        matches++;
+        setTimeout(() => {
+          if (currentId > 0 && !isLeftEdge) {
+            const newId = squares[parseInt(currentId) - 1].id;
+            const newSquare = document.getElementById(newId);
+            click(newSquare);
+          }
+          if (currentId > 9 && !isRightEdge) {
+            const newId = squares[parseInt(currentId) + 1 - width].id;
+            const newSquare = document.getElementById(newId);
+            click(newSquare);
+          }
+          if (currentId > 10) {
+            const newId = squares[parseInt(currentId - width)].id;
+            const newSquare = document.getElementById(newId);
+            click(newSquare);
+          }
+          if (currentId > 11 && !isLeftEdge) {
+            const newId = squares[parseInt(currentId) - 1 - width].id;
+            const newSquare = document.getElementById(newId);
+            click(newSquare);
+          }
+          if (currentId < 98 && !isRightEdge) {
+            const newId = squares[parseInt(currentId) + 1].id;
+            const newSquare = document.getElementById(newId);
+            click(newSquare);
+          }
+          if (currentId < 90 && !isLeftEdge) {
+            const newId = squares[parseInt(currentId) - 1 + width].id;
+            const newSquare = document.getElementById(newId);
+            click(newSquare);
+          }
+          if (currentId < 88 && !isRightEdge) {
+            const newId = squares[parseInt(currentId) + 1 + width].id;
+            const newSquare = document.getElementById(newId);
+            click(newSquare);
+          }
+          if (currentId < 89) {
+            const newId = squares[parseInt(currentId) + width].id;
+            const newSquare = document.getElementById(newId);
+            click(newSquare);
+          }
+        }, 10);
       }
-      if (matches === bombAmount) {
+
+      function gameOver(square) {
         result.innerHTML = '';
         isGameOver = true;
-        document.getElementById('modalMessage').innerText = 'YOU WIN!';
+        document.getElementById('modalMessage').innerText = 'BOOM! Game Over!';
         $('#gameOverModal').modal('show');
+
+        squares.forEach(square => {
+          if (square.classList.contains('bomb')) {
+            square.innerHTML = '<img src="bomba.png" alt="Bomb">';
+            square.classList.remove('bomb');
+            square.classList.add('checked');
+          }
+        });
       }
-    }
-  }
-});
 
+      function checkForWin() {
+        let matches = 0;
 
+        for (let i = 0; i < squares.length; i++) {
+          if (squares[i].classList.contains('flag') && squares[i].classList.contains('bomb')) {
+            matches++;
+          }
+          if (matches === bombAmount) {
+            result.innerHTML = '';
+            isGameOver = true;
+            document.getElementById('modalMessage').innerText = 'YOU WIN!';
+            $('#gameOverModal').modal('show');
+          }
+        }
+      }
+
+      // Update instructions based on screen size
+      const mobileInstructions = `
+        <h2>Instructions</h2>
+        <p><strong>Tap:</strong> Reveal a square.</p>
+        <p><strong>Long Press:</strong> Place a Stink.</p>
+        <p>The goal is to reveal all squares that are not steebombs. Stinks can be used to mark suspected steebombs locations.</p>
+      `;
+      
+      const desktopInstructions = `
+        <h2>Instructions</h2>
+        <p><strong>Left Click:</strong> Reveal a square.</p>
+        <p><strong>Right Click:</strong> Place a Stink.</p>
+        <p>The goal is to reveal all squares that are not steebombs. Stinks can be used to mark suspected steebombs locations.</p>
+      `;
+
+      function updateInstructions() {
+        const instructions = document.querySelector('.instructions');
+        if (window.innerWidth <= 767) {
+          instructions.innerHTML = mobileInstructions;
+        } else {
+          instructions.innerHTML = desktopInstructions;
+        }
+      }
+
+      // Run on load
+      updateInstructions();
+
+      // Run on resize
+      window.addEventListener('resize', updateInstructions);
+    });
   </script>
 </body>
 </html>
