@@ -93,10 +93,14 @@
         background-color: #e64a19; /* Darker orange */
       }
 
-      @media (max-width: 767px) {
-        .grid {
-          grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
-        }
+     
+        @media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(10, 40px); /* Mantiene el tamaño de columna igual que en PC */
+    grid-template-rows: repeat(10, 40px); /* Mantiene el tamaño de fila igual que en PC */
+  }
+
+
 
         h1 {
           font-size: 2rem;
