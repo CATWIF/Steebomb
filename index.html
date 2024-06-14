@@ -11,14 +11,19 @@
         font-family: 'Unbounded', sans-serif;
         background: linear-gradient(to right, #ff0000, #f1bd02); /* Updated background gradient */
         color: #fff;
+        overflow-x: hidden;
       }
 
       .container {
-        margin-top: 20px;
-      }
+  padding: 0;
+  margin: 0 auto;
+}
 
       .grid {
         display: grid;
+  overflow: hidden;
+  margin: auto;
+
         grid-template-columns: repeat(10, 40px);
         grid-template-rows: repeat(10, 40px);
         gap: 1px;
@@ -94,13 +99,7 @@
       }
 
       @media (max-width: 767px) {
-        body,html {
-  font-family: 'Unbounded', sans-serif;
-  background: linear-gradient(to right, #ff0000, #f1bd02);
-  color: #fff;
-  overflow-x: hidden; /* Evita el desbordamiento horizontal */
-  overflow-y: hidden;
-}
+        
 
   .grid {
     display: grid;
@@ -176,6 +175,7 @@
   let flags = 0;
   let squares = [];
   let isGameOver = false;
+  let touchStartTime;
 
   function createBoard() {
     flagsLeft.innerHTML = bombAmount;
@@ -192,33 +192,38 @@
       grid.appendChild(square);
       squares.push(square);
 
-      // Event listener for placing a flag with right click or long press on mobile
       square.addEventListener('click', function(e) {
-  e.preventDefault(); // Prevenir el comportamiento predeterminado del click en dispositivos móviles
-  if (e.type === 'click' || e.type === 'touchstart') {
-    click(square);
-  }
-});
+        if (e.type === 'click') {
+          click(square);
+        }
+      });
 
-square.addEventListener('touchstart', function(e) {
-  e.preventDefault(); // Prevenir el comportamiento predeterminado del touch en dispositivos móviles
-  if (e.touches.length === 1) {
-    // Touch corto: Colocar un stink
-    addFlag(square);
-  } else if (e.touches.length > 1) {
-    // Touch largo: Revelar el cuadrado
-    click(square);
-  }
-});
-square.addEventListener('contextmenu', function(e) {
-  e.preventDefault(); // Prevenir el menú contextual del navegador en dispositivos móviles
-  addFlag(square);
-});
+      square.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        addFlag(square);
+      });
+
+      // Touch events
+      square.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        touchStartTime = Date.now();
+      });
+
+      square.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        let touchDuration = Date.now() - touchStartTime;
+        if (touchDuration < 500) { // Touch corto
+          click(square);
+        } else { // Touch largo
+          addFlag(square);
+        }
+      });
     }
+
     for (let i = 0; i < squares.length; i++) {
       let total = 0;
-      const isLeftEdge = i % width === 0;
-      const isRightEdge = i % width === width - 1;
+      const isLeftEdge = (i % width === 0);
+      const isRightEdge = (i % width === width - 1);
 
       if (squares[i].classList.contains('valid')) {
         if (i > 0 && !isLeftEdge && squares[i - 1].classList.contains('bomb')) total++;
@@ -237,7 +242,7 @@ square.addEventListener('contextmenu', function(e) {
 
   function addFlag(square) {
     if (isGameOver) return;
-    if (!square.classList.contains('checked') && flags < bombAmount) {
+    if (!square.classList.contains('checked') && (flags < bombAmount)) {
       if (!square.classList.contains('flag')) {
         square.classList.add('flag');
         square.innerHTML = '<img src="flag.png" alt="Flag">';
@@ -276,8 +281,8 @@ square.addEventListener('contextmenu', function(e) {
   }
 
   function checkSquare(square, currentId) {
-    const isLeftEdge = currentId % width === 0;
-    const isRightEdge = currentId % width === width - 1;
+    const isLeftEdge = (currentId % width === 0);
+    const isRightEdge = (currentId % width === width - 1);
 
     setTimeout(() => {
       if (currentId > 0 && !isLeftEdge) {
@@ -354,6 +359,7 @@ square.addEventListener('contextmenu', function(e) {
     }
   }
 });
+
 
   </script>
 </body>
